@@ -1,13 +1,14 @@
 #include <iostream>
 #include <vector>
  
-
+//game board itself
 class board3x3{
     private:
         int matrix[3][3] = {};
     public:
 
         int checkBoard(){
+            //check for a win
             for(int i = 0; i < 3; i++){
                 if((matrix[i][0] == matrix[i][1]) && (matrix[i][1] == matrix[i][2])){
                     return 1;
@@ -25,7 +26,7 @@ class board3x3{
             if ((matrix[0][2] == matrix[1][1]) && matrix[1][1] == matrix[2][0]) {
                 return 1;
             }
-
+            //check tie
             int full = 0;
             for (int i = 0; i < 3; i++){
                 for(int j = 0; j < 3; j++){
@@ -34,7 +35,7 @@ class board3x3{
                     }
                 }
             }
-
+            //check tie
             if(full == 9){
                 return 2;
             }
@@ -66,6 +67,8 @@ class board3x3{
 
 };
 
+//put functions
+
 void p1turn(board3x3 board, int r, int c){
 
     board.put(r,c,1);
@@ -91,9 +94,24 @@ void p2turn(board3x3 board, int r, int c){
 
 }
 
+void game(){
 
+    bool gameOn = true;
+
+    board3x3 board;
+
+    
+    while(gameOn){
+        p1turn(board, int r, int c);
+
+        p2turn(board, int r, int c);
+
+    } 
+}
 int main(){
+      
 
+    
     
 
 }
