@@ -10,20 +10,20 @@ class board3x3{
         int checkBoard(){
             //check for a win
             for(int i = 0; i < 3; i++){
-                if((matrix[i][0] == matrix[i][1]) && (matrix[i][1] == matrix[i][2])){
+                if((matrix[i][0] != 0 && matrix[i][0] == matrix[i][1]) && (matrix[i][1] == matrix[i][2])){
                     return 1;
                 }
             }
             for(int j = 0; j < 3; j++){
-                if((matrix[0][j] == matrix[1][j]) && (matrix[1][j] == matrix[2][j])){
+                if((matrix[0][j] != 0 && matrix[0][j] == matrix[1][j]) && (matrix[1][j] == matrix[2][j])){
                     return 1;
                 }
                 }
             
-            if ((matrix[0][0] == matrix[1][1]) && (matrix[1][1] == matrix[2][2])){
+            if ((matrix[0][0] != 0 && matrix[0][0] == matrix[1][1]) && (matrix[1][1] == matrix[2][2])){
                 return 1;
             }
-            if ((matrix[0][2] == matrix[1][1]) && matrix[1][1] == matrix[2][0]) {
+            if ((matrix[0][2] != 0 && matrix[0][2] == matrix[1][1]) && matrix[1][1] == matrix[2][0]) {
                 return 1;
             }
             //check tie
@@ -43,18 +43,15 @@ class board3x3{
             return 0;
 
         }            
-        void put(int r, int c, int player){
-            //prompt something about inputting where you'll put your x/o
-            if (matrix[r][c] == 0){
-                matrix[r][c] = player;
-            }
-            else{
-                put(r, c, player);
-            }
-
-
-
+        bool put(int r, int c, int player){
+            if (matrix[r][c] != 0) return false; // occupied, reject
+            matrix[r][c] = player;
+            return true;
         }
+
+
+
+        
 
         int gameEnd(int winner){
             return winner;
@@ -69,44 +66,40 @@ class board3x3{
 
 //put functions
 
-void p1turn(board3x3 board, int r, int c){
 
-    board.put(r,c,1);
-    if(board.checkBoard() == 1){
 
+bool p1turn(board3x3 &board, int r, int c){
+    if (!board.put(r, c, 1)) {
+        return false; // invalid move — caller should ask again / report error
+    }
+    int status = board.checkBoard();
+    if (status == 1) {
         board.gameEnd(1);
-    }
-    else if (board.checkBoard() == 2) {
+        }   
+    else if (status == 2) {
         board.tie();
     }
-
 }
 
-void p2turn(board3x3 board, int r, int c){
 
-    board.put(r,c,2);
-    if(board.checkBoard() == 1){
+
+bool p2turn(board3x3 &board, int r, int c){
+    if (!board.put(r, c, 2)) {
+        return false; // invalid move — caller should ask again / report error
+    }
+    int status = board.checkBoard();
+    if (status == 1) {
         board.gameEnd(2);
-    }
-    else if (board.checkBoard() == 2) {
+        }   
+    else if (status == 2) {
         board.tie();
     }
-
 }
+
 
 void game(){
 
-    bool gameOn = true;
-
-    board3x3 board;
-
     
-    while(gameOn){
-        p1turn(board, int r, int c);
-
-        p2turn(board, int r, int c);
-
-    } 
 }
 int main(){
       
