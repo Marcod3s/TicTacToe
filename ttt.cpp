@@ -1,6 +1,9 @@
 #include <iostream>
 #include <vector>
- 
+#include "httplib.h"
+#include "json.hpp"
+using json = nlohmann::json;
+
 //game board itself
 class board3x3{
     private:
@@ -68,7 +71,7 @@ class board3x3{
 
 
 
-bool p1turn(board3x3 &board, int r, int c){
+/*bool p1turn(board3x3 &board, int r, int c){
     if (!board.put(r, c, 1)) {
         return false; // invalid move — caller should ask again / report error
     }
@@ -96,16 +99,44 @@ bool p2turn(board3x3 &board, int r, int c){
     }
 }
 
-
+*/
 void game(){
 
-    
+
 }
+
+board3x3 board;
+bool p1Turn = true;    
+
 int main(){
-      
+    httplib::Server svr;
 
-    
-    
+    svr.set_default_headers({
+        {"Access-Control-Allow-Origin", "*"}
+    });
 
+    svr.Post("/move", [](const httplib::Request& req, httplib::Response& res){
+        auto body = json::parse(req.body);
+        int r = body["r"];
+        int c = body["c"];
+        int player = p1Turn ? 1 : 2;
+        bool ok = board.put(r, c, player);
+        int status = board.checkBoard();
+        if (ok) p1Turn = !p1Turn;
+        json response = {
+            {"valid", ok},
+            {"status", status},
+            {"winner", status == 1 ? player : 0}
+        };
+
+        res.set_content(response.dump(), "application/json");
+        });
+
+        if (!svr.listen("0.0.0.0", 8080)) {
+        std::cerr << "Failed to start server on port 8080" << std::endl;
+        return 1;
 }
 
+        }
+
+    
